@@ -1,89 +1,111 @@
-// --- Interfaces Section ---
+// --- Interfaces ---
 
-/**
- * Represents a Teacher's data profile.
- * Allows for any additional properties.
- */
-interface TeacherProfile {
+// Teacher interface
+interface Teacher {
   readonly firstName: string;
-  readonly lastName:string;
+  readonly lastName: string;
   fullTimeEmployee: boolean;
   yearsOfExperience?: number;
   location: string;
   [key: string]: any;
 }
 
-/**
- * Represents a Director's data profile, who is also a Teacher but with reports.
- */
-interface DirectorProfile extends TeacherProfile {
+// Directors interface
+interface Directors extends Teacher {
   numberOfReports: number;
 }
 
-/**
- * Describes the shape of the printTeacher function.
- */
+// printTeacher function interface
 interface printTeacherFunction {
   (firstName: string, lastName: string): string;
 }
 
+// Student interface
+interface Student {
+  firstName: string;
+  lastName: string;
+  age: number;
+  location: string;
+}
 
-// --- Functions Section ---
+// --- Functions ---
 
-/**
- * Creates a formatted string from a teacher's name.
- * @param firstName - The first name of the teacher.
- * @param lastName - The last name of the teacher.
- * @returns A string in the format "F. LastName".
- */
+// printTeacher function
 const printTeacher: printTeacherFunction = (firstName, lastName) => {
   return `${firstName.charAt(0)}. ${lastName}`;
 };
 
+// --- Student Data ---
 
-// --- Execution Section ---
+const student1: Student = {
+  firstName: "Alice",
+  lastName: "Smith",
+  age: 20,
+  location: "New York",
+};
 
-// Create a Teacher instance
-const teacher3: TeacherProfile = {
-  firstName: 'John',
+const student2: Student = {
+  firstName: "Bob",
+  lastName: "Johnson",
+  age: 22,
+  location: "London",
+};
+
+const studentsList: Student[] = [student1, student2];
+
+// --- Render Table in Vanilla JS ---
+
+const table = document.createElement("table");
+const headerRow = document.createElement("tr");
+const th1 = document.createElement("th");
+th1.textContent = "First Name";
+const th2 = document.createElement("th");
+th2.textContent = "Location";
+headerRow.appendChild(th1);
+headerRow.appendChild(th2);
+table.appendChild(headerRow);
+
+studentsList.forEach((student) => {
+  const row = document.createElement("tr");
+  const firstNameCell = document.createElement("td");
+  firstNameCell.textContent = student.firstName;
+  const locationCell = document.createElement("td");
+  locationCell.textContent = student.location;
+  row.appendChild(firstNameCell);
+  row.appendChild(locationCell);
+  table.appendChild(row);
+});
+
+document.body.appendChild(table);
+
+// --- Teacher and Director Example ---
+
+const teacher3: Teacher = {
+  firstName: "John",
+  lastName: "Doe",
   fullTimeEmployee: false,
-  lastName: 'Doe',
-  location: 'London',
+  location: "London",
   contract: false,
 };
 
-// Create a Director instance
-const director1: DirectorProfile = {
-  firstName: 'John',
-  lastName: 'Doe',
-  location: 'London',
+const director1: Directors = {
+  firstName: "John",
+  lastName: "Doe",
+  location: "London",
   fullTimeEmployee: true,
   numberOfReports: 17,
 };
 
-// --- Output ---
+console.log(printTeacher("John", "Doe"));
 
-console.log("Teacher:");
-console.log(teacher3);
+// --- StudentClass ---
 
-console.log("\nDirector:");
-console.log(director1);
-
-console.log("\nFormatted Teacher Name:");
-console.log(printTeacher('John', 'Doe'));
-
-// --- StudentClass Section ---
-
-/**
- * Describes the constructor for a StudentClass.
- */
+// Describes the constructor for the StudentClass.
 interface StudentClassConstructor {
-  new(firstName: string, lastName: string): StudentClassInterface;
+  new (firstName: string, lastName: string): StudentClassInterface;
 }
 
-/**
- * Describes the instance of a StudentClass.
- */
+// Describes the instance of a StudentClass.
 interface StudentClassInterface {
   firstName: string;
   lastName: string;
@@ -91,76 +113,16 @@ interface StudentClassInterface {
   displayName(): string;
 }
 
-/**
- * Represents a student.
- */
+// Represents a student.
 class StudentClass implements StudentClassInterface {
-  constructor(
-    public firstName: string,
-    public lastName: string
-  ) {}
+  constructor(public firstName: string, public lastName: string) {}
 
-  workOnHomework = (): string => 'Currently working';
+  workOnHomework = (): string => "Currently working";
 
   displayName = (): string => this.firstName;
 }
 
-console.log('\n--- Student ---');
-const student = new StudentClass('Ada', 'Lovelace');
+// Create an instance of StudentClass and log its methods' output.
+const student = new StudentClass("Ada", "Lovelace");
 console.log(student.displayName());
 console.log(student.workOnHomework());
-
-// --- Employee Creation Section ---
-
-interface DirectorInterface {
-  workFromHome(): string;
-  getCoffeeBreak(): string;
-  workDirectorTasks(): string;
-}
-
-interface TeacherInterface {
-  workFromHome(): string;
-  getCoffeeBreak(): string;
-  workTeacherTasks(): string;
-}
-
-class Director implements DirectorInterface {
-  workFromHome(): string {
-    return 'Working from home';
-  }
-
-  getCoffeeBreak(): string {
-    return 'Getting a coffee break';
-  }
-
-  workDirectorTasks(): string {
-    return 'Working on director tasks';
-  }
-}
-
-class Teacher implements TeacherInterface {
-  workFromHome(): string {
-    return 'Cannot work from home';
-  }
-
-  getCoffeeBreak(): string {
-    return 'Cannot have a break';
-  }
-
-  workTeacherTasks(): string {
-    return 'Getting to work';
-  }
-}
-
-function createEmployee(salary: number | string): Director | Teacher {
-  if (typeof salary === 'number' && salary < 500) {
-    return new Teacher();
-  }
-  return new Director();
-}
-
-console.log('\n--- Employee Creation ---');
-console.log(createEmployee(200));
-console.log(createEmployee(1000));
-console.log(createEmployee('$500'));
-// Let's leave my project here for today, and I will continue tomorrow.
